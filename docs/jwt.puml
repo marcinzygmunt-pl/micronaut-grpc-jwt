@@ -1,0 +1,31 @@
+@startuml
+title gRPC JWT Authentication & Resource Access Sequence
+
+actor Client
+participant "Auth Server\n(Identity Provider)" as Auth
+participant "Resource Server\n(API)" as Resource
+
+Client -> Auth: gRPC AuthService/Login\nLoginRequest { username, password }
+alt credentials valid
+    Auth --> Client: LoginReply { token (JWT) }
+else credentials invalid
+    Auth --> Client: Unauthorized
+end
+
+
+Client -> Resource: gRPC ResourceService/SecureHello\nAuthorization: Bearer <token>
+alt access_token valid
+    Resource --> Client: SecureHelloReply { protected data }
+else access_token expired or invalid
+    Resource --> Client: Unauthorized
+end
+
+note left of Auth
+  Signs JWT access_token with private key
+end note
+
+note right of Resource
+  Verifies JWT signature & claims
+  using public key / JWKS
+end note
+@enduml
