@@ -1,26 +1,28 @@
-## Micronaut 4.9.3 Documentation
+# Micronaut gRPC JWT
 
-- [User Guide](https://docs.micronaut.io/4.9.3/guide/index.html)
-- [API Reference](https://docs.micronaut.io/4.9.3/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/4.9.3/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
----
+Example project showing how to secure **gRPC services** in **Micronaut** using **JWT authentication**.
 
-- [Shadow Gradle Plugin](https://gradleup.com/shadow/)
-- [Micronaut Gradle Plugin documentation](https://micronaut-projects.github.io/micronaut-gradle-plugin/latest/)
-- [GraalVM Gradle Plugin documentation](https://graalvm.github.io/native-build-tools/latest/gradle-plugin.html)
-## Feature serialization-jackson documentation
+## Flow
 
-- [Micronaut Serialization Jackson Core documentation](https://micronaut-projects.github.io/micronaut-serialization/latest/guide/)
+![JWT gRPC Sequence Diagram](docs/jwt_diagram.svg)
 
+1. **Client** calls `AuthService/Login` with username + password.
+2. **Auth Server** verifies the token:
+    - ✅ valid → returns a signed JWT token.
+    - ❌ invalid → returns Unauthorized
+3. **Client** calls `ResourceService/SecureHello` with `Authorization: Bearer <token>`.
+4. **Resource Server** verifies the token:
+    - ✅ valid → returns protected data
+    - ❌ invalid/expired → returns Unauthorized
 
-## Feature security-jwt documentation
+## Example Client Usage
+### Run from Java
+Use code from method ```demoCall()``` from Main
+### Run from GRCP Client
+Use a gRPC client (grpcurl, Postman, or generated stubs) to:
+Get a token via AuthService/Login
+Call ResourceService/SecureHello with Authorization: Bearer <token>
+## Run
 
-- [Micronaut Security JWT documentation](https://micronaut-projects.github.io/micronaut-security/latest/guide/index.html)
-
-
-## Feature micronaut-aot documentation
-
-- [Micronaut AOT documentation](https://micronaut-projects.github.io/micronaut-aot/latest/guide/)
-
-
+```bash
+./gradlew run
