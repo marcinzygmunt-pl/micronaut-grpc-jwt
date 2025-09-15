@@ -1,0 +1,13 @@
+micronaut:
+  server:
+    port: 8099
+  application:
+    name: grpc-jwt-demo
+  security:
+    enabled: true
+    token:
+      jwt:
+        signatures:
+          secret:
+            generator:
+              secret: "32charslongsupersecretkey!!!!!!!"
